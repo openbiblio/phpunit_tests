@@ -1,6 +1,10 @@
 <?php
 class SitesTest extends PHPUnit_Framework_TestCase {
 
+	function __construct() {
+		$this->fake = Faker\Factory::create();
+	}
+
 	private function getJSONSites() {
 		$url = OBIB_LOCAL_URL . "/admin/adminSrvr.php";
 		$opts = array('http' => array('method' => 'POST', 'content' => 'cat=sites&mode=getAll_sites'));
@@ -17,8 +21,11 @@ class SitesTest extends PHPUnit_Framework_TestCase {
 		$site = new Sites;
 		$site->insert_el(array(
 			'calendar' => 2,
-			'name' => substr(md5(rand()), 0, 20),
+			'name' => $this->fake->company,
 			'code' => substr(md5(rand()), 0, 6),
+			'address1' => $this->fake->streetAddress,
+			'city' => $this->fake->city,
+			'email' => $this->fake->email,
 			'delivery_note' => 'Please deliver this'));
 	}
 
