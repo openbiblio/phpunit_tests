@@ -19,15 +19,32 @@ class SitesTest extends PHPUnit_Framework_TestCase {
 	public function testSiteAdd() {
 	// Assumes that calendar #2 exists
 		$site = new Sites;
+		$company = $this->fake->company;
+		$code = substr(md5(rand()), 0, 6);
+
 		$site->insert_el(array(
 			'calendar' => 2,
-			'name' => $this->fake->company,
-			'code' => substr(md5(rand()), 0, 6),
+			'name' => $company,
+			'code' => $code,
 			'address1' => $this->fake->streetAddress,
 			'city' => $this->fake->city,
 			'email' => $this->fake->email,
 			'delivery_note' => 'Please deliver this'));
-	}
+
+                $rows = $site->getMatches(array(
+                        'calendar' => 2,
+                        'name' => $company,
+                        'code' => $code,
+                ));
+
+                while (($row = $rows->fetch_assoc()) !== NULL) {
+                        $this->assertTrue(True);
+                        return 1;
+                }
+		throw new Exception('Could not find added site.');
+
+
+        }
 
 
 }

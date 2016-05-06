@@ -18,11 +18,15 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
 	public function testStaffAdd() {
 		$staff = new Staff;
+		$userName = $this->fake->userName;
+		$lastName = $this->fake->lastName;
+		$firstName = $this->fake->firstName;
+
 		$staff->insert_el(array(
-			'username' => $this->fake->userName,
+			'username' => $userName,
 			'pwd' => $this->fake->password,
-			'last_name' => $this->fake->lastName,
-			'first_name' => $this->fake->firstName,
+			'last_name' => $lastName,
+			'first_name' => $firstName,
                         'suspended_flg'=>boolean_flag_text(),
                         'admin_flg'=>boolean_flag_text(),
                         'tools_flg'=>boolean_flag_text(),
@@ -31,6 +35,19 @@ class UserTest extends PHPUnit_Framework_TestCase {
                         'catalog_flg'=>boolean_flag_text(),
                         'reports_flg'=>boolean_flag_text(),
 		));
+
+		$rows = $staff->getMatches(array(
+			'username' => $userName,
+			'last_name' => $lastName,
+			'first_name' =>	$firstName,
+		));
+
+                while (($row = $rows->fetch_assoc()) !== NULL) {
+                        $this->assertTrue(True);
+			return 1;
+                }
+		throw new Exception('Could not find added staff member.');
+
 
 	}
 
