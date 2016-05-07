@@ -3,6 +3,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
 
 	function __construct() {
 		$this->fake = Faker\Factory::create();
+		$this->staff = new Staff;
 	}
 
 	private function getJSONStaff() {
@@ -12,17 +13,22 @@ class UserTest extends PHPUnit_Framework_TestCase {
 		return file_get_contents($url, false, $context);
 	}
 
+	private function getRandomStaffId() {
+		// Clearly not random yet
+		return '1';
+	}
+
 	public function testStaffListIsValidJson() {
 		$this->assertInternalType('array', json_decode($this->getJSONStaff(), 1));
 	}
 
 	public function testStaffAdd() {
-		$staff = new Staff;
 		$userName = $this->fake->userName;
 		$lastName = $this->fake->lastName;
 		$firstName = $this->fake->firstName;
+		$_SESSION['userid'] = $this->getRandomStaffId();
 
-		$staff->insert_el(array(
+		$this->staff->insert_el(array(
 			'username' => $userName,
 			'pwd' => $this->fake->password,
 			'last_name' => $lastName,
@@ -36,7 +42,7 @@ class UserTest extends PHPUnit_Framework_TestCase {
                         'reports_flg'=>boolean_flag_text(),
 		));
 
-		$rows = $staff->getMatches(array(
+		$rows = $this->staff->getMatches(array(
 			'username' => $userName,
 			'last_name' => $lastName,
 			'first_name' =>	$firstName,
@@ -47,9 +53,6 @@ class UserTest extends PHPUnit_Framework_TestCase {
 			return 1;
                 }
 		throw new Exception('Could not find added staff member.');
-
-
 	}
-
 
 }
