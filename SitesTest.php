@@ -17,9 +17,15 @@ class SitesTest extends PHPUnit_Framework_TestCase {
 		$this->assertInternalType('array', json_decode($this->getJSONSites(), 1));
 	}
 
-	public function getRandomSiteId() {
+	static function getRandomSiteId() {
 		// TODO: This should only return valid site ids
 		return rand(1,20);
+	}
+
+	private function getSiteIdWithCopies() {
+		$sql = "SELECT DISTINCT siteid as site FROM biblio_copy LIMIT 1";
+		$row = $this->site->select1($sql);
+		return $row['site'];
 	}
 
 	public function testSiteAdd() {
@@ -67,4 +73,11 @@ class SitesTest extends PHPUnit_Framework_TestCase {
 		$this->assertInternalType('array', $row);
 	}
 
+	public function testCannotDeleteSiteWithCopiesAttached() {
+		$site = $this->getSiteIdWithCopies();
+		$this->site->deleteOne($site);
+
+                $row = $this->site->getOne($site);
+		$this->assertInternalType('array', $row);
+	}
 }
