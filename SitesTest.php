@@ -48,7 +48,7 @@ class SitesTest extends PHPUnit_Framework_TestCase {
                         'code' => $code,
                 ));
 
-                while (($row = $rows->fetch_assoc()) !== NULL) {
+                foreach ($rows as $row) {
                         $this->assertTrue(True);
                         return 1;
                 }
